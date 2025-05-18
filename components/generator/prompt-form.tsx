@@ -21,7 +21,7 @@ export function PromptForm({ onGenerate, status, disableButton = false }: Prompt
     topic: "",
     tone: "funny",
     length: "medium",
-    includeHashtags: true,
+    includeHashtags: false,
     includeEmojis: true,
   });
 

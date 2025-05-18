@@ -12,11 +12,15 @@ function generatePromptText(options: ShitpostPrompt): string {
   promptText += `Keep it ${length} and engaging for social media. `;
   
   if (includeHashtags) {
-    promptText += "Include relevant hashtags. ";
+    promptText += "Include 2-3 relevant hashtags (words with # symbol in front). ";
+  } else {
+    promptText += "DO NOT include any hashtags whatsoever. A hashtag is any word with the # symbol in front of it (like #example). Make sure there are no # symbols anywhere in your response. ";
   }
   
   if (includeEmojis) {
     promptText += "Include appropriate emojis. ";
+  } else {
+    promptText += "DO NOT include any emojis. Keep the content text-only without any emoji characters. ";
   }
   
   promptText += "The tone should be entertaining and shareable. Don't include any warnings or explanations, just the post content.";

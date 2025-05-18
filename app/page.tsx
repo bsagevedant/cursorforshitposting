@@ -22,7 +22,7 @@ export default function LandingPage() {
   };
 
   return (
-    <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
+    <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
       <div className="min-h-screen flex flex-col items-center justify-center text-center p-4 bg-background">
         <div className="max-w-3xl">
           <h1 className="text-5xl font-extrabold tracking-tight mb-6 bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-purple-600">

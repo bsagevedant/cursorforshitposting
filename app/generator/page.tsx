@@ -28,7 +28,7 @@ export default function GeneratorRoute() {
   }
 
   return (
-    <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
+    <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
       <GeneratorPage />
       <Toaster position="bottom-center" />
     </ThemeProvider>

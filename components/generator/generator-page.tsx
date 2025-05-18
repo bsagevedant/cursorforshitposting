@@ -1,25 +1,38 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { useToast } from "@/hooks/use-toast";
 import { useCredits } from "@/hooks/use-credits";
+import { useAuth } from "@/lib/auth-context";
 import { ShitpostResponse, ShitpostPrompt, GenerationStatus } from "@/types";
 import { generateShitpost } from "@/lib/gemini";
 import { PromptForm } from "@/components/generator/prompt-form";
 import { ResultCard } from "@/components/generator/result-card";
 import { Favorites } from "@/components/generator/favorites";
 import { PageHeader } from "@/components/ui/page-header";
-import { ModeToggle } from "@/components/mode-toggle";
 import { PaymentModal } from "@/components/generator/payment-modal";
 import { CreditsDisplay } from "@/components/generator/credits-display";
+import { Button } from "@/components/ui/button";
+import { LogOut, Settings, Moon, Sun } from "lucide-react";
+import { useTheme } from "next-themes";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 export default function GeneratorPage() {
+  const router = useRouter();
   const [results, setResults] = useState<ShitpostResponse[]>([]);
   const [favorites, setFavorites] = useState<ShitpostResponse[]>([]);
   const [status, setStatus] = useState<GenerationStatus>("idle");
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
   const { toast } = useToast();
   const { credits, useCredit, addCredits } = useCredits(2); // Start with 2 free credits
+  const { logout } = useAuth();
+  const { resolvedTheme, setTheme } = useTheme();
 
   const handleGenerate = async (prompt: ShitpostPrompt) => {
     // Check if user has credits
@@ -95,6 +108,27 @@ export default function GeneratorPage() {
     );
   };
 
+  const handleLogout = async () => {
+    try {
+      await logout();
+      // Small delay to ensure Firebase auth state is updated
+      setTimeout(() => {
+        router.push("/");
+        toast({
+          description: "You have been successfully logged out"
+        });
+      }, 100);
+    } catch (error) {
+      toast.error({
+        description: "Failed to log out. Please try again."
+      });
+    }
+  };
+
+  const toggleTheme = () => {
+    setTheme(resolvedTheme === "dark" ? "light" : "dark");
+  };
+
   return (
     <div className="min-h-screen bg-background">
       <div className="container max-w-5xl mx-auto px-4 py-8">
@@ -103,7 +137,28 @@ export default function GeneratorPage() {
             title="Shitpost Generator"
             description="Create viral-worthy content for X/Twitter with AI"
           />
-          <ModeToggle />
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" size="icon" className="rounded-full">
+                <Settings className="h-5 w-5" />
+                <span className="sr-only">Settings</span>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-10 min-w-0 p-1">
+              <DropdownMenuItem onClick={toggleTheme} className="cursor-pointer h-8 px-2 justify-center">
+                {resolvedTheme === "dark" ? (
+                  <Sun className="h-4 w-4" />
+                ) : (
+                  <Moon className="h-4 w-4" />
+                )}
+                <span className="sr-only">Toggle theme</span>
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={handleLogout} className="cursor-pointer h-8 px-2 justify-center">
+                <LogOut className="h-4 w-4" />
+                <span className="sr-only">Logout</span>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
