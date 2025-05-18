@@ -114,14 +114,20 @@ export default function GeneratorPage() {
       // Small delay to ensure Firebase auth state is updated
       setTimeout(() => {
         router.push("/");
-        toast({
-          description: "You have been successfully logged out"
-        });
+        toast(
+          "Logged Out",
+          {
+            description: "You have been successfully logged out"
+          }
+        );
       }, 100);
     } catch (error) {
-      toast.error({
-        description: "Failed to log out. Please try again."
-      });
+      toast.error(
+        "Logout Failed",
+        {
+          description: "Failed to log out. Please try again."
+        }
+      );
     }
   };
 
